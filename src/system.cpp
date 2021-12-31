@@ -22,38 +22,47 @@ Processor& System::Cpu() { return cpu_; }
 
 // TODO: Return a container composed of the system's processes
 vector<Process>& System::Processes() {
-    std::map<int,int> processMap = {
-    };
-    for (Process process: processes_){
-        if (processMap.count(process.Pid()) == 0){
-            processMap.insert({process.Pid(), 0});
-        } else {
-            processMap.at(process.Pid())++;
-        };
-    };
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // BELOW CODE IS ATTEMPT FOR DYNAMIC PROCESS CPU UTILIZATION, COMMENTED OUT UNTIL SORTING ISSUE RESOLVED
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // std::map<int,int> processMap = {
+    // };
+    // for (Process process: processes_){
+    //     if (processMap.count(process.Pid()) == 0){
+    //         processMap.insert({process.Pid(), 0});
+    //     } else {
+    //         processMap.at(process.Pid())++;
+    //     };
+    // };
+    // vector<int> pids = LinuxParser::Pids();
+    // for (int pid: pids){
+    //     if (processMap.count(pid) == 0){
+    //         processMap.insert({pid, 0});
+    //     } else {
+    //         processMap.at(pid)++;
+    //     };
+    // };
+    // for (auto &ele : processMap){
+    //     if (ele.second > 0){
+    //         continue;
+    //     } else {
+    //         // instantiate Process object
+    //         Process proc(ele.first);
+    //         processes_.emplace_back(proc);
+    //     };
+    // };
+    // for (Process proc: processes_){
+    //     proc.CpuUtilization();
+    // };
+    // processMap.clear();
+    processes_.clear();
     vector<int> pids = LinuxParser::Pids();
     for (int pid: pids){
-        if (processMap.count(pid) == 0){
-            processMap.insert({pid, 0});
-        } else {
-            processMap.at(pid)++;
-        };
-    };
-    for (auto &ele : processMap){
-        if (ele.second > 0){
-            continue;
-        } else {
-            // instantiate Process object
-            Process proc(ele.first);
-            processes_.emplace_back(proc);
-        };
-    };
-    for (Process proc: processes_){
+        Process proc(pid);
         proc.CpuUtilization();
-    };
-    processMap.clear();
+        processes_.emplace_back(proc);
+    }
     sort(processes_.begin(), processes_.end());
-    // reverse(processes_.begin(), processes_.end());
     return processes_; 
 }
 

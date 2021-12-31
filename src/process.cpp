@@ -27,13 +27,15 @@ int Process::Pid() { return pid_;}
 
 // TODO: Return this process's CPU utilization
 float Process::CpuUtilization() { 
+    // LINES COMMENTED OUT FOR DYNAMIC CPU UTILIZATION UNTIL SORTING ISSUE RESOLVED
     long currProcJiffies = LinuxParser::ActiveJiffies(pid_);
     long currTotalJiffies = LinuxParser::Jiffies();
-    long procJiffies = currProcJiffies - beforeProcJiffies_;
-    long totalJiffies = currTotalJiffies - beforeTotalJiffies_;
+    // long procJiffies = currProcJiffies - beforeProcJiffies_;
+    // long totalJiffies = currTotalJiffies - beforeTotalJiffies_;
     beforeProcJiffies_ = currProcJiffies;
     beforeTotalJiffies_ = currTotalJiffies;
-    cpu_ = (1.0*procJiffies / totalJiffies);
+    cpu_ = (1.0*currProcJiffies/currTotalJiffies);
+    // cpu_ = (1.0*procJiffies / totalJiffies);
     return cpu_;
     }
 
